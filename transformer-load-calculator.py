@@ -108,6 +108,24 @@ def test_process_motor_data():
     print(results_2)
     print("-" * 40)
 
+def demonstrate_calculations():
+    """
+    Demonstrate for switchgear part 3.
+    """
+    # --- Test Case 1: Standard values ---
+    print("--- Test Case 1: Standard RLC components ---")
+    test_data = [
+        [100e-6, 10, 1, 1],  # [C, R, P_Motor, Q_Motor]
+        [150e-6, 5, 1, 1],
+        [200e-6, 15, 1, 1]
+    ]
+    print(f"Input Data:\n{np.array(test_data)}")
+    
+    results = process_motor_data(test_data)
+    print("\nCalculated Results:")
+    print(results)
+    print("-" * 40)
+
 if __name__ == "__main__":
     test_process_motor_data()
     # excel_file = 'EE347_Lab3c_Motordata.xlsx'
