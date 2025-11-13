@@ -4,6 +4,7 @@
 # Look for average power factor
 
 import numpy as np
+import pandas as pd
 
 def process_motor_data(data):
     """
@@ -26,7 +27,7 @@ def process_motor_data(data):
     
     results = []
     for row in data:
-        c, r = row
+        c, r, p, q = row
         
         # Calculate capacitive reactance
         # Handle capacitance being zero to avoid division by zero
@@ -40,13 +41,42 @@ def process_motor_data(data):
 
         # Calculate real power of resistors (purely real)
         P_R = 3 * (v_ph ^ 2) / r
-        results.append(P_R)
+        results.append(P_R + p)
 
         # Calculate reactive power of capacitors (purely reactive)
         Q_C = -3 * (v_LL ^ 2) * w * c
-        results.append(Q_C)
+        results.append(Q_C + q)
         
     return results
+
+def read_specific_rows(file_path, rows):
+    """
+    Reads specific rows from an Excel file.
+
+    Args:
+        file_path (str): The path to the Excel file.
+        rows (list): A list of 1-based row numbers to read.
+
+    Returns:
+        pandas.DataFrame: A DataFrame containing the data from the specified rows.
+    """
+    try:
+        # Read the entire sheet
+        df = pd.read_excel(file_path, header=None)
+        
+        # Convert 1-based row numbers to 0-based indices
+        indices = [row - 1 for row in rows]
+        
+        # Select the specified rows
+        selected_rows = df.iloc[indices]
+        
+        return selected_rows
+    except FileNotFoundError:
+        print(f"Error: The file '{file_path}' was not found.")
+        return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
 
 def test_process_motor_data():
     """
@@ -55,9 +85,9 @@ def test_process_motor_data():
     # --- Test Case 1: Standard values ---
     print("--- Test Case 1: Standard RLC components ---")
     test_data_1 = [
-        [100e-6, 10],  # [C, R]
-        [150e-6, 5],
-        [200e-6, 15]
+        [100e-6, 10, 1, 1],  # [C, R]
+        [150e-6, 5, 1, 1],
+        [200e-6, 15, 1, 1]
     ]
     print(f"Input Data:\n{np.array(test_data_1)}")
     
@@ -69,7 +99,7 @@ def test_process_motor_data():
     # --- Test Case 2: Edge case with zero capacitance ---
     print("\n--- Test Case 2: R circuit (zero capacitance) ---")
     test_data_2 = [
-        [0, 50]  # [C=0, R]
+        [0, 50, 0, 0]  # [C=0, R]
     ]
     print(f"Input Data:\n{np.array(test_data_2)}")
     
@@ -80,3 +110,8 @@ def test_process_motor_data():
 
 if __name__ == "__main__":
     test_process_motor_data()
+    # excel_file = 'EE347_Lab3c_Motordata.xlsx'
+    # rows_to_read = [5, 15, 24]
+    
+    # data = read_specific_rows(excel_file, rows_to_read)
+    # print(data[5])
