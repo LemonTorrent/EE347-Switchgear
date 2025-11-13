@@ -18,14 +18,14 @@ def process_motor_data(data):
                                  m: motor inductance (Henrys)
 
     Returns:
-        list: A list of complex impedances for each [c, r, m] entry.
+        list: A list of complex results for each [c, r, m] entry.
     """
     f = 60  # Assuming a frequency of 60 Hz
     w = 2 * np.pi * f
     v_ph = 120
     v_LL = 208
     
-    impedances = []
+    results = []
     for row in data:
         c, r, m = row
         
@@ -43,13 +43,13 @@ def process_motor_data(data):
 
         # Calculate real power of resistors (purely real)
         P_R = 3 * (v_ph ^ 2) / r
-        impedances.append(P_R)
+        results.append(P_R)
 
         # Calculate reactive power of capacitors (purely reactive)
         Q_C = -3 * (v_LL ^ 2) * w * c
-        impedances.append(Q_C)
+        results.append(Q_C)
         
-    return impedances
+    return results
 
 def test_process_motor_data():
     """
@@ -65,7 +65,7 @@ def test_process_motor_data():
     print(f"Input Data:\n{np.array(test_data_1)}")
     
     results_1 = process_motor_data(test_data_1)
-    print("\nCalculated Impedances (Z = R + jX):")
+    print("\nCalculated Results (Z = R + jX):")
     for i, z in enumerate(results_1):
         print(f"  Entry {i+1}: {z.real:.2f} + {z.imag:.2f}j Ohms")
     print("-" * 40)
@@ -78,7 +78,7 @@ def test_process_motor_data():
     print(f"Input Data:\n{np.array(test_data_2)}")
     
     results_2 = process_motor_data(test_data_2)
-    print("\nCalculated Impedances (Z = R + jX):")
+    print("\nCalculated Results (Z = R + jX):")
     for i, z in enumerate(results_2):
         print(f"  Entry {i+1}: {z.real:.2f} + {z.imag:.2f}j Ohms")
     print("-" * 40)
