@@ -85,7 +85,7 @@ def test_process_motor_data():
     # --- Test Case 1: Standard values ---
     print("--- Test Case 1: Standard RLC components ---")
     test_data_1 = [
-        [100e-6, 10, 1, 1],  # [C, R]
+        [100e-6, 10, 1, 1],  # [C, R, P_Motor, Q_Motor]
         [150e-6, 5, 1, 1],
         [200e-6, 15, 1, 1]
     ]
