@@ -22,6 +22,8 @@ def process_motor_data(data):
     """
     f = 60  # Assuming a frequency of 60 Hz
     w = 2 * np.pi * f
+    v_ph = 120
+    v_LL = 208
     
     impedances = []
     for row in data:
@@ -37,8 +39,15 @@ def process_motor_data(data):
         xl = w * m
         
         # Total impedance Z = R + j(Xl - Xc)
-        z = r + 1j * (xl + xc)
-        impedances.append(z)
+        # z = r + 1j * (xl + xc)
+
+        # Calculate real power of resistors (purely real)
+        P_R = 3 * (v_ph ^ 2) / r
+        impedances.append(P_R)
+
+        # Calculate reactive power of capacitors (purely reactive)
+        Q_C = -3 * (v_LL ^ 2) * w * c
+        impedances.append(Q_C)
         
     return impedances
 
