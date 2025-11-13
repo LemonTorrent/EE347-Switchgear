@@ -5,6 +5,7 @@
 
 import numpy as np
 import pandas as pd
+import math
 
 def process_motor_data(data):
     """
@@ -40,12 +41,12 @@ def process_motor_data(data):
         # z = r + 1j * (xc)
 
         # Calculate real power of resistors (purely real)
-        P_R = 3 * (v_ph ^ 2) / r
-        results.append(P_R + p)
+        P_R = math.sqrt(3) * (v_ph ^ 2) / r
+        results.append((P_R + p) / 3)
 
         # Calculate reactive power of capacitors (purely reactive)
         Q_C = -3 * (v_LL ^ 2) * w * c
-        results.append(Q_C + q)
+        results.append((Q_C + q) / 3)
         
     return results
 
