@@ -12,13 +12,12 @@ def process_motor_data(data):
     Assumes the motor value is an inductance (in Henrys) and frequency is 60Hz.
 
     Args:
-        data (list or np.array): A 2D array-like structure where each row is [c, r, m].
+        data (list or np.array): A 2D array-like structure where each row is [c, r].
                                  c: capacitance (Farads)
                                  r: resistance (Ohms)
-                                 m: motor inductance (Henrys)
 
     Returns:
-        list: A list of complex results for each [c, r, m] entry.
+        list: A list of results for each [c, r] entry.
     """
     f = 60  # Assuming a frequency of 60 Hz
     w = 2 * np.pi * f
@@ -27,19 +26,17 @@ def process_motor_data(data):
     
     results = []
     for row in data:
-        c, r, m = row
+        c, r = row
         
-        # Calculate capacitive and inductive reactance
+        # Calculate capacitive reactance
         # Handle capacitance being zero to avoid division by zero
         if c > 0:
             xc = -1 / (w * c)
         else:
             xc = 0
             
-        xl = w * m
-        
-        # Total impedance Z = R + j(Xl - Xc)
-        # z = r + 1j * (xl + xc)
+        # Total impedance Z = R - jXc
+        # z = r + 1j * (xc)
 
         # Calculate real power of resistors (purely real)
         P_R = 3 * (v_ph ^ 2) / r
@@ -58,29 +55,27 @@ def test_process_motor_data():
     # --- Test Case 1: Standard values ---
     print("--- Test Case 1: Standard RLC components ---")
     test_data_1 = [
-        [100e-6, 10, 20e-3],  # [C, R, L]
-        [150e-6, 5, 30e-3],
-        [200e-6, 15, 10e-3]
+        [100e-6, 10],  # [C, R]
+        [150e-6, 5],
+        [200e-6, 15]
     ]
     print(f"Input Data:\n{np.array(test_data_1)}")
     
     results_1 = process_motor_data(test_data_1)
-    print("\nCalculated Results (Z = R + jX):")
-    for i, z in enumerate(results_1):
-        print(f"  Entry {i+1}: {z.real:.2f} + {z.imag:.2f}j Ohms")
+    print("\nCalculated Results:")
+    print(results_1)
     print("-" * 40)
 
     # --- Test Case 2: Edge case with zero capacitance ---
-    print("\n--- Test Case 2: RL circuit (zero capacitance) ---")
+    print("\n--- Test Case 2: R circuit (zero capacitance) ---")
     test_data_2 = [
-        [0, 50, 100e-3]  # [C=0, R, L]
+        [0, 50]  # [C=0, R]
     ]
     print(f"Input Data:\n{np.array(test_data_2)}")
     
     results_2 = process_motor_data(test_data_2)
-    print("\nCalculated Results (Z = R + jX):")
-    for i, z in enumerate(results_2):
-        print(f"  Entry {i+1}: {z.real:.2f} + {z.imag:.2f}j Ohms")
+    print("\nCalculated Results:")
+    print(results_2)
     print("-" * 40)
 
 if __name__ == "__main__":
