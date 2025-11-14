@@ -28,15 +28,15 @@ def process_motor_data(data):
     
     results = []
     for row in data:
-        c, r, p, q = row
-        temp = [c, r, p, q]
+        xc, r, p, q = row
+        temp = [xc, r, p, q]
         
         # Calculate capacitive reactance
         # Handle capacitance being zero to avoid division by zero
-        if c > 0:
-            xc = -1 / (w * c)
-        else:
-            xc = 0
+        # if c > 0:
+        #     xc = -1 / (w * c)
+        # else:
+        #     xc = 0
             
         # Total impedance Z = R - jXc
         # z = r + 1j * (xc)
@@ -46,7 +46,7 @@ def process_motor_data(data):
         temp.append((P_R + p) / 3)
 
         # Calculate reactive power of capacitors (purely reactive)
-        Q_C = -3 * (v_LL ^ 2) * w * c
+        Q_C = (-1 * math.sqrt(3) * (v_LL ^ 2)) / xc
         temp.append((Q_C + q) / 3)
 
         results.append(temp)
@@ -118,7 +118,7 @@ def demonstrate_calculations():
     """
 
     r_vals = [300, 600, 1200]
-    c_vals = [1, 2, 3]
+    c_vals = [300, 600, 1200]
     excel_file = 'EE347_Lab3c_Motordata.xlsx'
     rows_to_read = [5, 15, 24]
     # cols = [5, 6]
@@ -134,14 +134,14 @@ def demonstrate_calculations():
             for k in range(len(rows_to_read)):
                 test_data.append([r_vals[i], c_vals[j], data.iloc[k][5], data.iloc[k][6]])
 
-    print(test_data)
+    # print(test_data)
     
     print(f"Input Data:\n{test_data}")
     
     results = process_motor_data(test_data)
     print("\nCalculated Results:")
     print(results)
-    print("-" * 40)
+    # print("-" * 40)
 
 if __name__ == "__main__":
     # test_process_motor_data()
