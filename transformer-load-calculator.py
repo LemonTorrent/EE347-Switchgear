@@ -29,6 +29,7 @@ def process_motor_data(data):
     results = []
     for row in data:
         c, r, p, q = row
+        temp = [c, r, p, q]
         
         # Calculate capacitive reactance
         # Handle capacitance being zero to avoid division by zero
@@ -42,11 +43,13 @@ def process_motor_data(data):
 
         # Calculate real power of resistors (purely real)
         P_R = math.sqrt(3) * (v_ph ^ 2) / r
-        results.append((P_R + p) / 3)
+        temp.append((P_R + p) / 3)
 
         # Calculate reactive power of capacitors (purely reactive)
         Q_C = -3 * (v_LL ^ 2) * w * c
-        results.append((Q_C + q) / 3)
+        temp.append((Q_C + q) / 3)
+
+        results.append(temp)
         
     return results
 
@@ -113,14 +116,27 @@ def demonstrate_calculations():
     """
     Demonstrate for switchgear part 3.
     """
-    # --- Test Case 1: Standard values ---
-    print("--- Test Case 1: Standard RLC components ---")
-    test_data = [
-        [100e-6, 10, 1, 1],  # [C, R, P_Motor, Q_Motor]
-        [150e-6, 5, 1, 1],
-        [200e-6, 15, 1, 1]
-    ]
-    print(f"Input Data:\n{np.array(test_data)}")
+
+    r_vals = [300, 600, 1200]
+    c_vals = [1, 2, 3]
+    excel_file = 'EE347_Lab3c_Motordata.xlsx'
+    rows_to_read = [5, 15, 24]
+    # cols = [5, 6]
+    
+    data = read_specific_rows(excel_file, rows_to_read)
+    # print(data)
+    # print(data.iloc[0][5])
+
+    test_data = []
+
+    for i in range(len(r_vals)):
+        for j in range(len(c_vals)):
+            for k in range(len(rows_to_read)):
+                test_data.append([r_vals[i], c_vals[j], data.iloc[k][5], data.iloc[k][6]])
+
+    print(test_data)
+    
+    print(f"Input Data:\n{test_data}")
     
     results = process_motor_data(test_data)
     print("\nCalculated Results:")
@@ -128,7 +144,8 @@ def demonstrate_calculations():
     print("-" * 40)
 
 if __name__ == "__main__":
-    test_process_motor_data()
+    # test_process_motor_data()
+    demonstrate_calculations()
     # excel_file = 'EE347_Lab3c_Motordata.xlsx'
     # rows_to_read = [5, 15, 24]
     
