@@ -30,16 +30,6 @@ def process_motor_data(data):
     for row in data:
         xc, r, p, q = row
         temp = [xc, r, p, q]
-        
-        # Calculate capacitive reactance
-        # Handle capacitance being zero to avoid division by zero
-        # if c > 0:
-        #     xc = -1 / (w * c)
-        # else:
-        #     xc = 0
-            
-        # Total impedance Z = R - jXc
-        # z = r + 1j * (xc)
 
         # Calculate real power of resistors (purely real)
         P_R = math.sqrt(3) * (v_ph ^ 2) / r
@@ -81,36 +71,6 @@ def read_specific_rows(file_path, rows):
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
-
-def test_process_motor_data():
-    """
-    Tests the process_motor_data function with sample data.
-    """
-    # --- Test Case 1: Standard values ---
-    print("--- Test Case 1: Standard RLC components ---")
-    test_data_1 = [
-        [100e-6, 10, 1, 1],  # [C, R, P_Motor, Q_Motor]
-        [150e-6, 5, 1, 1],
-        [200e-6, 15, 1, 1]
-    ]
-    print(f"Input Data:\n{np.array(test_data_1)}")
-    
-    results_1 = process_motor_data(test_data_1)
-    print("\nCalculated Results:")
-    print(results_1)
-    print("-" * 40)
-
-    # --- Test Case 2: Edge case with zero capacitance ---
-    print("\n--- Test Case 2: R circuit (zero capacitance) ---")
-    test_data_2 = [
-        [0, 50, 0, 0]  # [C=0, R]
-    ]
-    print(f"Input Data:\n{np.array(test_data_2)}")
-    
-    results_2 = process_motor_data(test_data_2)
-    print("\nCalculated Results:")
-    print(results_2)
-    print("-" * 40)
 
 def demonstrate_calculations():
     """
