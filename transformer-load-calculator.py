@@ -1,8 +1,3 @@
-# Use 175 watt for motor
-
-# Power factor might be a problem, since we don't know power factor on motor itself
-# Look for average power factor
-
 import numpy as np
 import pandas as pd
 import math
