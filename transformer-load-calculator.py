@@ -10,16 +10,17 @@ import math
 def process_motor_data(data):
     """
     Processes a 2D array of motor data.
-    For demonstration, this function will calculate the impedance for each component.
-    Assumes the motor value is an inductance (in Henrys) and frequency is 60Hz.
+    For demonstration, this function will calculate the loading on the transformer.
 
     Args:
         data (list or np.array): A 2D array-like structure where each row is [c, r].
                                  c: capacitance (Farads)
                                  r: resistance (Ohms)
+                                 p: real power of motor (Watts)
+                                 q: reactive power of motor (VA)
 
     Returns:
-        list: A list of results for each [c, r] entry.
+        list: A list of results appended to each [c, r, p, q] entry.
     """
     f = 60  # Assuming a frequency of 60 Hz
     w = 2 * np.pi * f
@@ -84,9 +85,7 @@ def demonstrate_calculations():
     # cols = [5, 6]
     
     data = read_specific_rows(excel_file, rows_to_read)
-    # print(data)
-    # print(data.iloc[0][5])
-
+    
     test_data = []
 
     for i in range(len(r_vals)):
@@ -104,10 +103,5 @@ def demonstrate_calculations():
     # print("-" * 40)
 
 if __name__ == "__main__":
-    # test_process_motor_data()
     demonstrate_calculations()
-    # excel_file = 'EE347_Lab3c_Motordata.xlsx'
-    # rows_to_read = [5, 15, 24]
-    
-    # data = read_specific_rows(excel_file, rows_to_read)
-    # print(data[5])
+
